@@ -1,6 +1,8 @@
 <h1 align="center">Peeky</h1>
 
-![Peeky logo](chrome/static/icon128.png "Peeky")
+<div style="text-align: center;">  
+  <img src="chrome/static/icon128.png" alt="Peeky!">  
+</div>
 
 > Preview links in a minimal floating overlay with Shift+Click, inspired by Arc browser's Peek feature.
 
