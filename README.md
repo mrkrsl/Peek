@@ -1,6 +1,8 @@
 <h1 align="center">Peeky</h1>
 
-<img src="chrome/static/icon128.png" alt="Peeky!" style="display: block; margin-left: auto; margin-right: auto;">
+<p align="center">
+  <img src="chrome/static/icon128.png" alt="Peeky!">
+</p>
 
 > Preview links in a minimal floating overlay with Shift+Click, inspired by Arc browser's Peek feature.
 
@@ -8,7 +10,7 @@ Peeky is a clean, stripped-down, performance-focused fork of [BerryPeek](https:/
 
 ## Supported browsers
 
-Works with any Chromium-based browser (Chrome, Edge, Brave, Opera, Arc, Comet, etc.).
+Works with any Chromium-based browser (Helium, Chrome, Edge, Brave, Opera, Arc, Comet, etc.).
 
 ## Features
 
