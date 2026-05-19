@@ -22,17 +22,6 @@ iframe {
   width: 100%;
   height: 100%;
   border: none;
-  transition: filter 0.3s ease;
-}
-
-/* Loading State */
-.iframe-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  font-family: system-ui, -apple-system, sans-serif;
-  color: var(--text-secondary);
 }
 
 /* Error State */

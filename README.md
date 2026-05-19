@@ -1,128 +1,79 @@
-<div align="center">
-  <img src="https://raw.githubusercontent.com/Kain-90/BerryPeek/975101353d1a8f73a45bc90b1dfbaf0030ebaa3d/chrome/static/icon.png" alt="BerryPeek Logo" width="120" height="120">
-</div>
+<h1 align="center">Peeky</h1>
 
-<h1 align="center">BerryPeek</h1>
+> Preview links in a minimal floating overlay with Shift+Click, inspired by Arc browser's Peek feature.
 
-> Preview links in an elegant overlay with Shift+Click, inspired by Arc browser's Peek feature.
+Peeky is a stripped-down, performance-focused fork of [BerryPeek](https://github.com/Kain-90/BerryPeek). It keeps the core idea — Shift+Click any link to preview it in a floating iframe — and removes the rest: no header bar, no theming, no drag/resize, no animations.
 
-## 🌐 Supported Browsers
+## Supported browsers
 
-BerryPeek works with all **Chromium-based browsers** including:
+Works with any Chromium-based browser (Chrome, Edge, Brave, Opera, Arc, Comet, etc.).
 
-![Chrome](https://img.shields.io/badge/Chrome-4285F4?logo=googlechrome&logoColor=white) ![Arc](https://img.shields.io/badge/Arc-000000?logo=arc&logoColor=white) ![Commet](https://img.shields.io/badge/Comet-000000?logoColor=white) ![Microsoft Edge](https://img.shields.io/badge/Microsoft%20Edge-0078D4?logo=microsoftedge&logoColor=white) ![Opera](https://img.shields.io/badge/Opera-FF1B2D?logo=opera&logoColor=white) ![Brave](https://img.shields.io/badge/Brave-FB542B?logo=brave&logoColor=white)
+## Features
 
-## ✨ Features
+- **Shift+Click** any link to open it in a centred floating preview
+- **Enter** or the top-right button promotes the preview to a real new tab
+- **Esc**, the X button, or clicking the dimmed backdrop dismisses the preview
+- Smart `X-Frame-Options` detection — if a site can't be framed, it opens in a new tab automatically
+- Minimal UI: just the iframe, two circular action buttons, and a faint dimmed backdrop
 
-- **Quick Preview**: Hold `Shift` and click any link to preview it in a beautiful overlay
-- **Arc-Inspired Design**: Elegant and modern UI inspired by [Arc browser's Peek feature](https://resources.arc.net/hc/en-us/articles/19335302900887-Peek-Preview-Sites-From-Pinned-Tabs)
-- **Seamless Integration**: Works on any webpage without interrupting your workflow
-- **Smart Frame Detection**: Automatically detects `X-Frame-Options` headers and opens links in new tabs when iframe embedding is restricted
-- **Easy Navigation**: 
-  - Refresh the preview
-  - Open in new tab
-  - Copy link
-  - Close overlay
+## Layout
 
-## 🚀 Installation
+- 6 px gap from the top and bottom of the viewport
+- Horizontal margins of 1⁄6 of the viewport width on each side
+- Action buttons sit in the right gutter, top-aligned with the iframe
 
-### Chrome Web Store (Easiest)
-
-[![Install from Chrome Web Store](https://img.shields.io/badge/Install%20from-Chrome%20Web%20Store-blue?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/berrypeek-link-preview-qu/acefdkhifcfklkfobgocedlokcjkchgn)
-
-1. Click the badge above or visit the [Chrome Web Store page](https://chromewebstore.google.com/detail/berrypeek-link-preview-qu/acefdkhifcfklkfobgocedlokcjkchgn)
-2. Click **"Add to Chrome"** or like **"Add to Dia"**
-3. Confirm the installation
-4. The extension is ready to use! 🎉
-
-### Manual Installation (For Other Browsers)
-
-1. Go to the [Releases page](https://github.com/Kain-90/BerryPeek/releases)
-2. Download the latest `chrome-*.zip` file
-3. Open your browser and navigate to the extensions page:
-   - **Chrome**: `chrome://extensions/`
-   - **Edge**: `edge://extensions/`
-   - **Opera**: `opera://extensions/`
-4. Enable "Developer mode" in the top right corner
-5. Click "Load unpacked" and select the downloaded zip file (**extract it first**)
-6. The extension is now installed! 🎉
-
-### From Source (For Developers)
+## Installation (from source)
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/Kain-90/BerryPeek.git
-   cd BerryPeek
+   git clone <your-fork-url>.git
+   cd Peek
    ```
 
-2. Open your browser and navigate to the extensions page:
-   - **Chrome**: `chrome://extensions/`
-   - **Edge**: `edge://extensions/`
-   - **Opera**: `opera://extensions/`
+2. Open your browser's extensions page:
+   - Chrome: `chrome://extensions/`
+   - Edge: `edge://extensions/`
+   - Brave: `brave://extensions/`
+   - Opera: `opera://extensions/`
 
-3. Enable "Developer mode" in the top right corner
+3. Enable **Developer mode** (top-right toggle).
 
-4. Click "Load unpacked" and select the `chrome` directory from this project
+4. Click **Load unpacked** and select the `chrome/` directory inside this project.
 
-5. The extension is now installed! 🎉
+5. Done. Open any page and Shift+Click a link to try it.
 
-## 🎯 Usage
+To update later, pull the latest changes and press the reload button on the extension card.
 
-1. Navigate to any webpage
-2. Hold down the `Shift` key
-3. Click on any link
-4. A preview overlay will appear showing the linked page
-5. Use the toolbar to:
-   - 🔄 Refresh the preview
-   - 🔗 Open in a new tab
-   - ✓ Copy the link
-   - ✕ Close the overlay
+## Usage
 
-## 🏗️ Project Structure
+1. Hold `Shift` and click any link.
+2. The page loads in a floating overlay.
+3. Press `Enter` or click the upper button to open it as a full tab; press `Esc`, click the lower button, or click the dimmed area to dismiss.
+
+## Project structure
 
 ```
 chrome/
-├── manifest.json       # Extension configuration
-├── background.js       # Background service worker
-├── content.js          # Content script for link detection
-├── content.css         # Content script styles
-├── iframe.html         # Preview overlay template
-├── iframe.js           # Preview overlay logic
-├── iframe.css          # Preview overlay styles
-├── rules.json          # Network rules for iframe loading
-└── static/             # Icons and assets
+├── manifest.json   # Extension configuration (MV3)
+├── background.js   # Service worker — checks X-Frame-Options
+├── content.js      # Detects Shift+Click, builds the overlay
+├── content.css     # Overlay styles
+├── iframe.html     # Inner-iframe shell
+├── iframe.js       # Loads the target URL inside the overlay iframe
+├── iframe.css      # Styles for the inner-iframe error state
+├── rules.json      # declarativeNetRequest — strips frame-blocking headers
+└── static/         # Icons (open.svg, close.svg, icon.png)
 ```
 
-## 💡 Inspiration
+## X-Frame-Options handling
 
-This extension brings the beloved [Peek feature from Arc browser](https://resources.arc.net/hc/en-us/articles/19335302900887-Peek-Preview-Sites-From-Pinned-Tabs) to Chrome and other Chromium-based browsers. Arc's Peek allows you to quickly preview links without leaving your current page, and we wanted to make this productivity boost available to everyone.
+Peeky checks each URL against the background service worker before showing it. The check runs in parallel with the iframe render, so it doesn't slow things down. If the site blocks framing (`X-Frame-Options: deny`, or a cross-origin `sameorigin`), Peeky dismisses the overlay and opens the link in a new tab instead.
 
-## 🔒 X-Frame-Options Handling
+## Acknowledgments
 
-BerryPeek intelligently handles websites that restrict iframe embedding through `X-Frame-Options` headers:
+- Forked from [BerryPeek](https://github.com/Kain-90/BerryPeek) by Kain-90.
+- Inspired by [Arc browser's Peek feature](https://resources.arc.net/hc/en-us/articles/19335302900887-Peek-Preview-Sites-From-Pinned-Tabs) by The Browser Company.
 
-- **X-Frame-Options: deny** - Links are automatically opened in a new tab
-- **X-Frame-Options: sameorigin** - Links are checked against the current page's origin:
-  - Same origin: Opens in preview overlay
-  - Different origin: Opens in a new tab
-- **No restriction** - Opens in preview overlay as normal
+## License
 
-This ensures a smooth user experience without security warnings or failed previews.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to:
-
-- Report bugs
-- Suggest new features
-- Submit pull requests
-
-## 📝 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 🙏 Acknowledgments
-
-- Inspired by [The Browser Company](https://arc.net/) and their innovative Arc browser
-- Built for users who love efficient browsing experiences
-
+[MIT License](LICENSE).
