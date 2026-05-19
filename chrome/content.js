@@ -35,6 +35,7 @@
 
     const overlay = document.createElement("div");
     overlay.id = "peeky-overlay";
+    overlay.tabIndex = -1;
 
     const container = document.createElement("div");
     container.id = "peeky-container";
@@ -81,30 +82,67 @@
       if (e.target === overlay) closePeekWindow();
     };
 
+    // When the mouse re-enters the dim backdrop or hovers our buttons (after
+    // the user clicked into the cross-origin iframe and stole focus),
+    // reclaim focus so Esc works again. Cross-origin focus can't be observed
+    // directly, so we use mouse re-entry as the trigger.
+    const reclaimFocus = () => overlay.focus({ preventScroll: true });
+    overlay.addEventListener("mouseenter", reclaimFocus);
+    buttonContainer.addEventListener("mouseenter", reclaimFocus);
+
+    const openInTab = () => {
+      window.open(url, "_blank");
+      closePeekWindow();
+    };
+
+    const handleKey = (key) => {
+      if (key === "Escape") {
+        closePeekWindow();
+      } else if (key === "Enter") {
+        openInTab();
+      }
+    };
+
     const onMessage = (event) => {
       if (event.source !== iframe.contentWindow) return;
-      if (event.data === "requestURL") {
+      const data = event.data;
+      if (data === "requestURL") {
         iframe.contentWindow.postMessage(url, "*");
-      } else if (event.data && event.data.type === "openInNewTab") {
-        window.open(event.data.url, "_blank");
+      } else if (data && data.type === "openInNewTab") {
+        window.open(data.url, "_blank");
         closePeekWindow();
+      } else if (data && data.type === "peekyKey") {
+        handleKey(data.key);
       }
     };
     window.addEventListener("message", onMessage);
 
     const keyHandler = (e) => {
       if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopPropagation();
         closePeekWindow();
       } else if (e.key === "Enter") {
-        e.preventDefault();
-        window.open(url, "_blank");
-        closePeekWindow();
+        // Only treat Enter as "open in tab" when our overlay/buttons are
+        // focused, not when the user is typing in a host-page form.
+        const ae = document.activeElement;
+        if (ae === shadowHost || ae === document.body || ae === null) {
+          e.preventDefault();
+          e.stopPropagation();
+          openInTab();
+        }
       }
     };
-    document.addEventListener("keydown", keyHandler);
+    // Capture phase on window catches keys before host page handlers, and
+    // works whether focus is on the host page document or the shadow root.
+    window.addEventListener("keydown", keyHandler, true);
 
     shadowRoot.appendChild(overlay);
     document.body.appendChild(shadowHost);
+
+    // Take initial keyboard focus so Esc/Enter work immediately, before the
+    // iframe finishes loading and tries to steal focus.
+    overlay.focus({ preventScroll: true });
 
     currentPeekWindow = { shadowHost, keyHandler, messageHandler: onMessage };
   }
@@ -112,7 +150,7 @@
   function closePeekWindow() {
     if (!currentPeekWindow) return;
     currentPeekWindow.shadowHost.remove();
-    document.removeEventListener("keydown", currentPeekWindow.keyHandler);
+    window.removeEventListener("keydown", currentPeekWindow.keyHandler, true);
     window.removeEventListener("message", currentPeekWindow.messageHandler);
     currentPeekWindow = null;
   }

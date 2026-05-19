@@ -1,6 +1,18 @@
 // Request URL from parent window
 window.parent.postMessage("requestURL", "*");
 
+// Forward Esc to the parent so the overlay can be dismissed even when
+// focus is on this (same-origin) iframe document instead of the host page.
+window.addEventListener(
+  "keydown",
+  (e) => {
+    if (e.key === "Escape") {
+      window.parent.postMessage({ type: "peekyKey", key: e.key }, "*");
+    }
+  },
+  true
+);
+
 function createIframe(url) {
   const iframe = document.createElement("iframe");
   let hasLoaded = false;
