@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "description": "Preview links in a clean overlay with Shift+Click, inspired by Arc browser.",
   "permissions": [
-    "storage",
     "declarativeNetRequest",
     "declarativeNetRequestWithHostAccess"
   ],
